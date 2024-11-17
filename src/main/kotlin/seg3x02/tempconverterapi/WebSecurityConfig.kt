@@ -24,9 +24,8 @@ class WebSecurityConfig {
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .authorizeHttpRequests { auth -> auth.anyRequest().authenticated() }
-            .httpBasic()
-            .and()
-            .csrf().disable()
+            .httpBasic(Customizer.withDefaults())
+            .csrf { csrf -> csrf.disable() }
         return http.build()
     }
 
@@ -45,13 +44,6 @@ class WebSecurityConfig {
             .build()
 
         return InMemoryUserDetailsManager(user1, user2)
-    }
-
-    @Bean
-    fun webSecurityCustomizer(): WebSecurityCustomizer {
-        return WebSecurityCustomizer { web: WebSecurity ->
-            web.ignoring()
-                .requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**","/vendor/**","/fonts/**") }
     }
 
     @Bean
